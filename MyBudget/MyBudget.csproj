@@ -46,9 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\..\..\Desktop\Program.cs">
-      <Link>Program.cs</Link>
-    </Compile>
+    <Compile Include="Program.cs"/>
     <Compile Include="models\Category.cs" />
     <Compile Include="models\Note.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
