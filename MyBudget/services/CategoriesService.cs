@@ -22,6 +22,12 @@ namespace MyBudget.services
         }
         public void CategoriesLoadBuffer() 
         {
+            if (!File.Exists(_CategoryFilePath))
+            {
+                LCategories = new List<Category>();
+                CategoriesSaveChanges();
+                return;
+            }
             var jsonCategory = File.ReadAllText(_CategoryFilePath);
             LCategories = JsonConvert.DeserializeObject<List<Category>>(jsonCategory);
         }

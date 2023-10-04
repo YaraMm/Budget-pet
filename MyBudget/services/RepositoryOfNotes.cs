@@ -24,6 +24,11 @@ namespace MyBudget.services
             _fileService.Notes.Add(note);
             _fileService.SaveChanges(); 
         }
+        public List<Note> GetNotes()
+        {
+            _fileService.LoadBuffer();
+            return _fileService.Notes;
+        }
         
     }
 }

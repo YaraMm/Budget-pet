@@ -20,11 +20,18 @@ namespace MyBudget.services
             var ourJsonFile = JsonConvert.SerializeObject(Notes);
             File.WriteAllText(_filePath, ourJsonFile);
         }
+
         public void LoadBuffer()//Берет БД на буфер
         {
+            if (!File.Exists(_filePath))
+            {
+                Notes = new List<Note>();
+                SaveChanges();
+                return;
+            }
+
             var jsonData = File.ReadAllText(_filePath);
             Notes = JsonConvert.DeserializeObject<List<Note>>(jsonData);
         }
-
     }
 }

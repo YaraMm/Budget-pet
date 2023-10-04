@@ -19,8 +19,7 @@ namespace MyBudget.services
         }
         
         public List<Category> GetAll()
-        {
-            _CategoryService.CategoriesLoadBuffer();
+        { 
             return _CategoryService.LCategories;
         }
 
