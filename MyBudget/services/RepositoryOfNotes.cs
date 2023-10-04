@@ -29,6 +29,26 @@ namespace MyBudget.services
             _fileService.LoadBuffer();
             return _fileService.Notes;
         }
-        
+
+        public void Remove(Guid id)
+        {
+            _fileService.LoadBuffer();
+            var res = -1;
+            for(int i = 0; i < _fileService.Notes.Count; i++)
+            {
+                if (_fileService.Notes[i].Id == id)
+                {
+                    res = i;
+                    break;
+                }
+            }
+            if (res == -1)
+            {
+                throw new Exception($"Id {id} не найден");
+            }
+            _fileService.Notes.RemoveAt(res);
+            _fileService.SaveChanges();
+        }
+
     }
 }

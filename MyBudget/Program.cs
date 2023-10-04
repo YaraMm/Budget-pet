@@ -17,7 +17,10 @@ namespace MyBudget
 
             while (true)
             {
-                Console.WriteLine("Выберите действие:\n1 - Новая заметка\n2 - Вывести статистику\n");
+                Console.WriteLine("Выберите действие:\n" +
+                    "1 - Новая заметка\n" +
+                    "2 - Вывести статистику\n" +
+                    "3 - Удалить запись");
 
                 string choise = Console.ReadLine();
                 switch (choise)
@@ -29,6 +32,9 @@ namespace MyBudget
                     case "2":
                         GetStatistics();
                         break;
+                    case "3":
+                        RemoveNote();
+                        break;
 
                     default:
                         Console.WriteLine("Введите команду из списка");
@@ -37,16 +43,25 @@ namespace MyBudget
             }
         }
 
+        public static void RemoveNote()
+        {
+            Console.WriteLine("Выберите удаляемый элемент");
+            var choice = int.Parse(Console.ReadLine()) - 1;
+            var listOfNotes = repositoryOfNotes.GetNotes();
+            var removedNote = listOfNotes[choice].Id;
+            repositoryOfNotes.Remove(removedNote);
+        }
         public static void GetStatistics()
         {
             var statistics = repositoryOfNotes.GetNotes();
-            foreach (var note in statistics)
+            for(int i = 0; i < statistics.Count; i++) 
             {
+                var note = statistics[i];
                 var category = repositoryOfCategories.GetByID(note.Category);
-                Console.WriteLine($"{category.Name} {note.Amount} рублей {note.Date}\n");
+
+                Console.WriteLine($"{i + 1}. {category.Name} {note.Amount} рублей {note.Date}\n");
             }
         }
-
 
         public static void CreateANewNote()
         {
