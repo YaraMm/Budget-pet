@@ -10,34 +10,47 @@ namespace MyBudget.services
 {
     internal class RepositoryOfCategories
     {
-        private readonly CategoriesService _CategoryService;
+        private readonly CategoriesService _categoryService;
 
         public RepositoryOfCategories()
         {
-            _CategoryService = new CategoriesService();
-            _CategoryService.CategoriesLoadBuffer();
+            _categoryService = new CategoriesService();
+            _categoryService.CategoriesLoadBuffer();
         }
         
         public List<Category> GetAll()
         { 
-            return _CategoryService.LCategories;
+            return _categoryService.LCategories;
         }
 
         public Category GetByID(Guid id)
         {
-            foreach (var x in _CategoryService.LCategories)
+            foreach (var x in _categoryService.LCategories)
             {
                 if (x.Id == id) return x;
             }
             return null;
         }
-        public Guid SaveCategory(Category Category)
+        public Guid SaveCategory(Category category)
         {
-            _CategoryService.CategoriesLoadBuffer();
-            Category.Id = Guid.NewGuid();
-            _CategoryService.LCategories.Add(Category);
-            _CategoryService.CategoriesSaveChanges();
-            return Category.Id;
+            _categoryService.CategoriesLoadBuffer();
+            category.Id = Guid.NewGuid();
+            _categoryService.LCategories.Add(category);
+            _categoryService.CategoriesSaveChanges();
+            return category.Id;
+        }
+        public void RemoveCategory(Guid id)
+        {
+            _categoryService.CategoriesLoadBuffer();
+
+            var removedCategory = _categoryService.LCategories.FirstOrDefault(x => x.Id == id);
+
+            if (removedCategory == null)
+            {
+                throw new Exception($"Id {id} не найден");
+            }
+            _categoryService.LCategories.Remove(removedCategory);
+            _categoryService.CategoriesSaveChanges();
         }
     }
 }

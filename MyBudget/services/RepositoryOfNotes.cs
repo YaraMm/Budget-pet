@@ -42,7 +42,7 @@ namespace MyBudget.services
             return _fileService.Notes.Select(x => x.Copy()).ToList();
         }
 
-        public void Remove(Guid id)
+        public void RemoveNote(Guid id)
         {
             _fileService.LoadBuffer();
 
@@ -55,5 +55,6 @@ namespace MyBudget.services
             _fileService.Notes.Remove(removedNote);
             _fileService.SaveChanges();
         }
+        
     }
 }

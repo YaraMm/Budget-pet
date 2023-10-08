@@ -23,7 +23,9 @@ namespace MyBudget
                     "1 - Новая заметка\n" +
                     "2 - Вывести статистику\n" +
                     "3 - Удалить запись \n" +
-                    "4 - Изменить запись");
+                    "4 - Изменить запись \n" +
+                    "5 - Показать категории \n" +
+                    "6 - Удалить категорию");
 
                 string choise = Console.ReadLine();
                 switch (choise)
@@ -31,7 +33,6 @@ namespace MyBudget
                     case "1":
                         CreateANewNote();
                         break;
-
                     case "2":
                         GetStatistics();
                         break;
@@ -41,8 +42,12 @@ namespace MyBudget
                     case "4":
                         EditNote();
                         break;
-
-
+                    case "5":
+                        ShowCategories();
+                        break;
+                    case "6":
+                        RemoveCategory();
+                        break;
                     default:
                         Console.WriteLine("Введите команду из списка");
                         break;
@@ -103,7 +108,15 @@ namespace MyBudget
             var choice = int.Parse(Console.ReadLine()) - 1;
             var listOfNotes = repositoryOfNotes.GetNotes();
             var removedNote = listOfNotes[choice].Id;
-            repositoryOfNotes.Remove(removedNote);
+            repositoryOfNotes.RemoveNote(removedNote);
+        }
+        private static void RemoveCategory()
+        {
+            Console.WriteLine("Выберите удаляемую категорию");
+            var choice = int.Parse(Console.ReadLine()) - 1;
+            var listOfCategories = repositoryOfCategories.GetAll();
+            var removedCategory = listOfCategories[choice].Id;
+            repositoryOfCategories.RemoveCategory(removedCategory);
         }
         public static void GetStatistics()
         {

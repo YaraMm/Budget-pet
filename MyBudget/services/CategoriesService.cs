@@ -13,22 +13,22 @@ namespace MyBudget.services
     {
         public List<Category> LCategories { get; set; }
 
-        private const string _CategoryFilePath = "categories.json";
+        private const string CategoryFilePath = "categories.json";
 
         public void CategoriesSaveChanges()
         {
             var CategoryJson = JsonConvert.SerializeObject(LCategories);
-            File.WriteAllText(_CategoryFilePath, CategoryJson);
+            File.WriteAllText(CategoryFilePath, CategoryJson);
         }
         public void CategoriesLoadBuffer() 
         {
-            if (!File.Exists(_CategoryFilePath))
+            if (!File.Exists(CategoryFilePath))
             {
                 LCategories = new List<Category>();
                 CategoriesSaveChanges();
                 return;
             }
-            var jsonCategory = File.ReadAllText(_CategoryFilePath);
+            var jsonCategory = File.ReadAllText(CategoryFilePath);
             LCategories = JsonConvert.DeserializeObject<List<Category>>(jsonCategory);
         }
         
