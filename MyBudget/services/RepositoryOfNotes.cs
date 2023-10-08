@@ -16,6 +16,18 @@ namespace MyBudget.services
             _fileService = new FileService();
         }
 
+        public void UpdateNote(Note note)
+        {
+            _fileService.LoadBuffer();
+            var listOfNotes = _fileService.Notes;
+            int index = -1;
+            for(int i = 0; i < listOfNotes.Count; i++)
+            {
+                if (listOfNotes[i].Id == note.Id) index = i;
+            }
+            listOfNotes[index] = note.Copy();
+            _fileService.SaveChanges();
+        }
         public void Save(Note note)
         {
             _fileService.LoadBuffer();
@@ -27,28 +39,21 @@ namespace MyBudget.services
         public List<Note> GetNotes()
         {
             _fileService.LoadBuffer();
-            return _fileService.Notes;
+            return _fileService.Notes.Select(x => x.Copy()).ToList();
         }
 
         public void Remove(Guid id)
         {
             _fileService.LoadBuffer();
-            var res = -1;
-            for(int i = 0; i < _fileService.Notes.Count; i++)
-            {
-                if (_fileService.Notes[i].Id == id)
-                {
-                    res = i;
-                    break;
-                }
-            }
-            if (res == -1)
+
+            var removedNote = _fileService.Notes.FirstOrDefault(x => x.Id == id);
+
+            if (removedNote == null)
             {
                 throw new Exception($"Id {id} не найден");
             }
-            _fileService.Notes.RemoveAt(res);
+            _fileService.Notes.Remove(removedNote);
             _fileService.SaveChanges();
         }
-
     }
 }

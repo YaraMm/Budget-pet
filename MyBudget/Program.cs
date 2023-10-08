@@ -2,6 +2,8 @@
 using MyBudget.services;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Net.NetworkInformation;
 
 namespace MyBudget
 {
@@ -20,7 +22,8 @@ namespace MyBudget
                 Console.WriteLine("Выберите действие:\n" +
                     "1 - Новая заметка\n" +
                     "2 - Вывести статистику\n" +
-                    "3 - Удалить запись");
+                    "3 - Удалить запись \n" +
+                    "4 - Изменить запись");
 
                 string choise = Console.ReadLine();
                 switch (choise)
@@ -35,6 +38,10 @@ namespace MyBudget
                     case "3":
                         RemoveNote();
                         break;
+                    case "4":
+                        EditNote();
+                        break;
+
 
                     default:
                         Console.WriteLine("Введите команду из списка");
@@ -43,7 +50,54 @@ namespace MyBudget
             }
         }
 
-        public static void RemoveNote()
+        public static void EditNote()
+        {
+            Console.WriteLine("Выберите изменяемую запись");
+            GetStatistics();
+            var choice = int.Parse(Console.ReadLine()) - 1;
+            var listOfNotes = repositoryOfNotes.GetNotes();
+            var note = listOfNotes[choice];
+            Console.WriteLine("Выберите изменяемый параметр:\n" +
+                    "1 - Сумма\n" +
+                    "2 - Дата\n" +
+                    "3 - Категория");
+            string chosenParametre = Console.ReadLine();
+            switch (chosenParametre)
+            {
+                case "1":
+                    EditAmount(note);
+                    break;
+                case "2":
+                    EditDate(note);
+                    break;
+                case "3":
+                    EditCategory(note);
+                    break;
+            }
+
+            repositoryOfNotes.UpdateNote(note);  
+        }
+
+        private static void EditAmount(Note note)
+        {
+            Console.WriteLine("Введите новую сумму:");
+            decimal newAmount = decimal.Parse(Console.ReadLine(), new NumberFormatInfo() { NumberDecimalSeparator = "." });
+            note.Amount = newAmount; 
+        }
+
+        private static void EditDate(Note note)
+        {
+            Console.WriteLine("Введите новую дату:");
+            DateTime newDate = DateTime.Parse(Console.ReadLine());
+            note.Date = newDate;
+        }
+
+        private static void EditCategory(Note note)
+        {
+            SetCategory(note);
+        }
+
+        private static void RemoveNote()
         {
             Console.WriteLine("Выберите удаляемый элемент");
             var choice = int.Parse(Console.ReadLine()) - 1;
@@ -66,7 +120,15 @@ namespace MyBudget
         public static void CreateANewNote()
         {
             Note note = CreateNote();
+            SetCategory(note);
+            Console.WriteLine("Выведите сумму:\n");
+            note.Amount = decimal.Parse(Console.ReadLine());
 
+            repositoryOfNotes.Save(note);
+        }
+
+        private static void SetCategory(Note note)
+        {
             Console.WriteLine("Выберите катеогорию:");
             Console.WriteLine("n - Создать категорию\n");
             ShowCategories();
@@ -81,13 +143,7 @@ namespace MyBudget
                 var choiceNum = Int32.Parse(choice);
                 note.Category = ChooseACategory(choiceNum);
             }
-
-            Console.WriteLine("Выведите сумму:\n");
-            note.Amount = decimal.Parse(Console.ReadLine());
-
-            repositoryOfNotes.Save(note);
         }
-
         public static void ShowCategories()
         {
             var listOfCategories = repositoryOfCategories.GetAll();
