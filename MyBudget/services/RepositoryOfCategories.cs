@@ -52,5 +52,18 @@ namespace MyBudget.services
             _categoryService.LCategories.Remove(removedCategory);
             _categoryService.CategoriesSaveChanges();
         }
+
+        public void UpdateCategory(Category category)
+        {
+            _categoryService.CategoriesLoadBuffer();
+            var listOfCategories = _categoryService.LCategories;
+            int index = -1;
+            for (int i = 0; i < listOfCategories.Count; i++)
+            {
+                if (listOfCategories[i].Id == category.Id) index = i;
+            }
+            listOfCategories[index] = category.Copy();
+            _categoryService.CategoriesSaveChanges();
+        }
     }
 }

@@ -28,6 +28,7 @@ namespace MyBudget.services
             listOfNotes[index] = note.Copy();
             _fileService.SaveChanges();
         }
+
         public void Save(Note note)
         {
             _fileService.LoadBuffer();

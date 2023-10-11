@@ -3,6 +3,7 @@ using MyBudget.services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net.NetworkInformation;
 
 namespace MyBudget
@@ -25,7 +26,9 @@ namespace MyBudget
                     "3 - Удалить запись \n" +
                     "4 - Изменить запись \n" +
                     "5 - Показать категории \n" +
-                    "6 - Удалить категорию");
+                    "6 - Удалить категорию \n" +
+                    "7 - Изменить категорию \n" +
+                    "8 - Выход");
 
                 string choise = Console.ReadLine();
                 switch (choise)
@@ -48,6 +51,12 @@ namespace MyBudget
                     case "6":
                         RemoveCategory();
                         break;
+                    case "7":
+                        EditNameOfCategory();
+                        break;
+                    case "8":
+                        Environment.Exit(0);
+                        break;
                     default:
                         Console.WriteLine("Введите команду из списка");
                         break;
@@ -68,6 +77,7 @@ namespace MyBudget
                     "3 - Категория");
             string chosenParametre = Console.ReadLine();
             switch (chosenParametre)
+
             {
                 case "1":
                     EditAmount(note);
@@ -81,6 +91,20 @@ namespace MyBudget
             }
 
             repositoryOfNotes.UpdateNote(note);  
+        }
+
+        private static void EditNameOfCategory()
+        {
+            Console.WriteLine("Выберите изменяемую категорию");
+            ShowCategories();
+            var choice = int.Parse(Console.ReadLine()) - 1;
+            var listOfCategories = repositoryOfCategories.GetAll();
+            var category = listOfCategories[choice];
+            Console.WriteLine("Введите новое имя категории");
+            var newName = Console.ReadLine();
+            category.Name = newName;
+
+            repositoryOfCategories.UpdateCategory(category);
         }
 
         private static void EditAmount(Note note)
@@ -100,6 +124,7 @@ namespace MyBudget
         private static void EditCategory(Note note)
         {
             SetCategory(note);
+
         }
 
         private static void RemoveNote()
@@ -113,10 +138,20 @@ namespace MyBudget
         private static void RemoveCategory()
         {
             Console.WriteLine("Выберите удаляемую категорию");
+            ShowCategories();
             var choice = int.Parse(Console.ReadLine()) - 1;
             var listOfCategories = repositoryOfCategories.GetAll();
             var removedCategory = listOfCategories[choice].Id;
-            repositoryOfCategories.RemoveCategory(removedCategory);
+            var listOfNotes = repositoryOfNotes.GetNotes();
+            var note = listOfNotes.FirstOrDefault(x => x.Category == removedCategory);
+            if (note == null)
+            {
+                repositoryOfCategories.RemoveCategory(removedCategory);
+            }
+            else 
+            {
+                Console.WriteLine("Эта категория ссылается на существующую запись"); 
+            }
         }
         public static void GetStatistics()
         {
@@ -181,7 +216,7 @@ namespace MyBudget
         }
 
         public static void CreateACategory(Note note)
-        {
+        { 
             Console.WriteLine("Введите имя категории");
             var name = Console.ReadLine();
             var cat = new Category() { Name = name };

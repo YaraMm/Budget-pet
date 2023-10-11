@@ -10,5 +10,14 @@ namespace MyBudget.models
     {
         public string Name { get; set; }
         public Guid Id { get; set; }
+
+        public Category Copy()
+        {
+            return new Category
+            {
+                Id = Id,
+                Name = Name
+            };
+        }
     }
 }
